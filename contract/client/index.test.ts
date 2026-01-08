@@ -116,13 +116,9 @@ describe("lst manager tests",()=>{
 
     it("stake vault test",async()=>{
         const STAKE_CONFIG_ID = new PublicKey("StakeConfig11111111111111111111111111111111");
-        
-        // let stake_acc=Keypair.generate();
         let epoch=(await connection.getEpochInfo()).epoch;
-
         let serialised_epoch=borsh.serialize(serialiseAmountSchema,{amount:epoch});
         console.log("epoch : ",epoch, serialised_epoch);
-        // let [stake_acc, stake_acc_bump]=PublicKey.findProgramAddressSync([Buffer.from("stake_acc"), Buffer.from([epoch]), lst_manager_pda.toBuffer()], lst_manager_prog);
         let [stake_acc, stake_acc_bump]=PublicKey.findProgramAddressSync([Buffer.from("stake_acc"), Buffer.from(serialised_epoch), lst_manager_pda.toBuffer()], lst_manager_prog);
 
         console.log("stake acc : ",stake_acc.toBase58());

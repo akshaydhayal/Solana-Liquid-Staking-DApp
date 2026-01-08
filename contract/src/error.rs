@@ -18,8 +18,11 @@ pub enum LSTErrors{
     #[error("given stake manager pda seeds do not match with correct stake manager seeds")]
     StakeManagerPdaMismatch,
 
-    #[error("given user position pda seeds do not match with correct user position seeds")]
-    UserPositionPdaMismatch
+    #[error("given user withdraw request pda seeds do not match with correct user withdraw request seeds")]
+    UserWithdrawRequestPdaMismatch,
+
+    #[error("given epoch withdraw pda seeds do not match with correct epoch withdraw seeds")]
+    EpochWithdrawPdaMismatch
 }
 
 impl From<LSTErrors> for ProgramError{

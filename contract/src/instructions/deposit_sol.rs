@@ -1,13 +1,10 @@
 use solana_program::{
-    account_info::{AccountInfo, next_account_info}, entrypoint::ProgramResult,
-    instruction::{AccountMeta, Instruction}, msg, program::{invoke, invoke_signed},
-    program_error::ProgramError, pubkey::Pubkey, rent::Rent,
-    system_instruction::{SystemInstruction, transfer}, sysvar::Sysvar
+    account_info::{AccountInfo, next_account_info}, entrypoint::ProgramResult, instruction::{AccountMeta, Instruction}, msg, program::{invoke, invoke_signed}, program_error::ProgramError, program_pack::Pack, pubkey::Pubkey, rent::Rent, system_instruction::{SystemInstruction, transfer}, sysvar::Sysvar
 };
-use spl_token::instruction::{mint_to_checked , initialize_mint2};
+use spl_token::{instruction::{initialize_mint2, mint_to_checked}, state::Mint};
 use borsh::{BorshDeserialize, BorshSerialize};
 
-use crate::{error::LSTErrors, state::{LSTManager, UserPosition}};
+use crate::{error::LSTErrors, maths::exchange_rate::{calculate_sol_to_lst_amounts, sol_to_lst_rate}, state::lst_manager::LSTManager};
 
 // pub fn deposit_sol(program_id:&Pubkey, accounts:&[AccountInfo],deposit_amount:u64, lst_manager_bump:u8, lst_manager_vault_bump:u8, lst_mint_bump:u8, user_position_bump:u8)->ProgramResult{
 pub fn deposit_sol(program_id:&Pubkey, accounts:&[AccountInfo],deposit_amount:u64, lst_manager_bump:u8, lst_manager_vault_bump:u8, lst_mint_bump:u8)->ProgramResult{
@@ -48,29 +45,28 @@ pub fn deposit_sol(program_id:&Pubkey, accounts:&[AccountInfo],deposit_amount:u6
         return Err(LSTErrors::LSTMintPdaMismatch.into());
     }
 
+    let mut lst_manager_data=LSTManager::try_from_slice(&lst_manager_pda.data.borrow())?;
+    let total_sol_in_protocol=lst_manager_data.total_sol_staked + lst_manager_vault_pda.lamports();
+    let total_lst_in_protocol=Mint::unpack(&lst_mint_pda.data.borrow())?.supply;
+
+    //exchange rates
+    let sol_to_lst_rate=sol_to_lst_rate(total_sol_in_protocol, total_lst_in_protocol)?;
+    let lst_tokens_to_mint=calculate_sol_to_lst_amounts(deposit_amount, sol_to_lst_rate)?;
+    
+    // let rate_of_1_sol:u64;
+    // if lst_manager_data.total_lst_supply==0{
+    //     rate_of_1_sol=1; 
+    // }else{
+    //     //@c total sol supply=total sol staked + sol present in vault
+    //     rate_of_1_sol=lst_manager_data.total_lst_supply / lst_manager_data.total_sol_staked;
+    // }
+    // let lst_tokens_to_mint=deposit_amount * rate_of_1_sol;
+    
     //transfer deposit amount to lst_manager_vault_pda
     let transfer_to_vault_ix=transfer(user.key,
         lst_manager_vault_pda.key, deposit_amount);
     invoke(&transfer_to_vault_ix,
         &[user.clone(), lst_manager_vault_pda.clone()])?;
-
-    // Mint lst tokens as per maths and send back to user
-    // EXCHANGE MATHS , 
-    //  if Total LST supply==0 , 1slt = 1sol, rate=1
-    //  else, rate of 1 lst = (Total SOL staked + Vault SOL) / Total LST supply
-    //  else, rate of 1 sol= Total LST supply / (Total SOL staked + Vault SOL) 
-    //  to_mint_lst_tokens =  deposit_amount / rate of 1 lst
-    //  to_mint_lst_tokens =  deposit_amount * rate of 1 sol 
-
-    let lst_manager_data=LSTManager::try_from_slice(&lst_manager_pda.data.borrow())?;
-    let rate_of_1_sol:u64;
-    if lst_manager_data.total_lst_supply==0{
-        rate_of_1_sol=1; 
-    }else{
-        //@c total sol supply=total sol staked + sol present in vault
-        rate_of_1_sol=lst_manager_data.total_lst_supply / lst_manager_data.total_sol_staked;
-    }
-    let lst_tokens_to_mint=deposit_amount * rate_of_1_sol;
 
     //mint lst tokens to user's ata
     let mint_to_user_ata_ix=mint_to_checked(&spl_token::ID,
@@ -81,25 +77,7 @@ pub fn deposit_sol(program_id:&Pubkey, accounts:&[AccountInfo],deposit_amount:u6
         &[lst_manager_seeds])?;
     msg!("minted {} lst tokens to user's ata",lst_tokens_to_mint);
 
-    // let rent=Rent::get()?;
-    // let user_position_seeds=&[b"user_position", user.key.as_ref(), &[user_position_bump]];
-    // let user_position_derived_pda=Pubkey::create_program_address(user_position_seeds,program_id)?;
-    // if *user_position_pda.key!=user_position_derived_pda{
-    //     return Err(LSTErrors::UserPositionPdaMismatch.into());
-    // }
-
-    // let user_position_pda_create_ix=Instruction::new_with_bincode(
-    //     *system_prog.key,
-    //     &SystemInstruction::CreateAccount {
-    //         lamports: rent.minimum_balance(UserPosition::USER_POSITION_SIZE),
-    //         space: UserPosition::USER_POSITION_SIZE as u64, owner: *program_id
-    //     },
-    //     vec![AccountMeta::new(*user.key, true), AccountMeta::new(*user_position_pda.key, true)]
-    // );
-    // invoke_signed(&user_position_pda_create_ix,
-    //     &[user.clone(), user_position_pda.clone(), system_prog.clone()],
-    //     &[user_position_seeds])?;
-    // msg!("user position pda created!!");
-
+    lst_manager_data.total_lst_supply+=lst_tokens_to_mint;
+    lst_manager_data.serialize(&mut *lst_manager_pda.data.borrow_mut())?;
     Ok(())
 }

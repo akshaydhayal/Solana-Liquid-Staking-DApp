@@ -30,9 +30,9 @@ pub fn process_instruction(program_id:&Pubkey, accounts:&[AccountInfo], instruct
             msg!("stake vault sol ix called");
             stake_vault_sol(program_id, accounts, lst_manager_bump, lst_manager_vault_bump,stake_acc_bump)?;
         },
-        InstructionType::BurnLST { burn_lst_amount, lst_manager_bump, lst_manager_vault_bump, lst_mint_bump }=>{
+        InstructionType::BurnLST { burn_lst_amount, lst_manager_bump, lst_manager_vault_bump, lst_mint_bump ,user_withdraw_request_bump, epoch_withdraw_bump}=>{
             msg!("burn LST ix called");
-            burn_lst(program_id, accounts, burn_lst_amount, lst_manager_bump, lst_manager_vault_bump, lst_mint_bump)?;
+            burn_lst(program_id, accounts, burn_lst_amount, lst_manager_bump, lst_manager_vault_bump, lst_mint_bump, user_withdraw_request_bump,epoch_withdraw_bump)?;
         }
     }
     Ok(())

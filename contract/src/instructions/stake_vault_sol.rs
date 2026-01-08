@@ -9,7 +9,7 @@ use solana_program::{
 use spl_token::instruction::{mint_to_checked , initialize_mint2};
 use borsh::{BorshDeserialize, BorshSerialize};
 
-use crate::{error::LSTErrors, state::LSTManager};
+use crate::{error::LSTErrors, state::lst_manager::LSTManager};
 
 pub fn stake_vault_sol(program_id:&Pubkey, accounts:&[AccountInfo], lst_manager_bump:u8, lst_manager_vault_bump:u8, stake_acc_bump:u8)->ProgramResult{
     let mut accounts_iter=accounts.iter();
@@ -39,7 +39,6 @@ pub fn stake_vault_sol(program_id:&Pubkey, accounts:&[AccountInfo], lst_manager_
     if lst_manager_derived!=*lst_manager_pda.key{
         return Err(LSTErrors::LSTManagerPdaMismatch.into());
     }
-    
     //@c a check that only admin of lst manager can call thus ix and not anyone, else he can misuse
     // it, like call before a epoch only, ideally this shoule be called just some time before epoch
     // ends so that most amount in vault is staked  
@@ -99,5 +98,9 @@ pub fn stake_vault_sol(program_id:&Pubkey, accounts:&[AccountInfo], lst_manager_
         sys_var_stake_history.clone(),stake_config.clone(), lst_manager_pda.clone(), stake_prog.clone()],
         &[lst_manager_seeds])?;
     msg!("delegated {} to validator {}",stake_amount, validator_vote_acc.key);
+
+    let mut lst_manager_data=LSTManager::try_from_slice(&lst_manager_pda.data.borrow_mut())?;
+    lst_manager_data.total_sol_staked+=stake_amount;
+    lst_manager_data.serialize(&mut *lst_manager_pda.data.borrow_mut())?;
     Ok(())
 }

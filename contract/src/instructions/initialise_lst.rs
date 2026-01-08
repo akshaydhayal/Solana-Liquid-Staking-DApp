@@ -4,7 +4,7 @@ use solana_program::{
 use spl_token::instruction::{initialize_mint2};
 use borsh::{BorshDeserialize, BorshSerialize};
 
-use crate::{error::LSTErrors, state::LSTManager};
+use crate::{error::LSTErrors, state::lst_manager::LSTManager};
 
 pub fn initialise_lst(program_id:&Pubkey, accounts:&[AccountInfo], lst_manager_bump:u8, lst_manager_vault_bump:u8, lst_mint_bump:u8)->ProgramResult{
     let mut accounts_iter=accounts.iter();

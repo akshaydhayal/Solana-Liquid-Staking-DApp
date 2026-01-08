@@ -1,5 +1,6 @@
 use borsh::{BorshSerialize, BorshDeserialize};
 use solana_program::pubkey::Pubkey;
+
 #[derive(BorshSerialize, BorshDeserialize)]
 pub struct LSTManager{
     pub admin:Pubkey,
@@ -10,13 +11,4 @@ pub struct LSTManager{
 }
 impl LSTManager{
     pub const LST_MANAGER_SIZE:usize=32+32+32+8+8;
-}
-
-#[derive(BorshSerialize, BorshDeserialize)]
-pub struct UserPosition{
-    pub user:Pubkey,
-    pub stake_amount:u64
-}
-impl UserPosition{
-    pub const USER_POSITION_SIZE:usize=32+8;
 }
