@@ -99,6 +99,8 @@ pub fn unstake_sol(program_id:&Pubkey, accounts:&[AccountInfo], stake_acc_index:
     //deactivate this split account so that we can withdraw from this split acc to withdraw wallet
     //update lst manager staked amount  
     
+    
+    
     //creating this split account 
     let create_split_stake_acc_ix=create_account(user.key, split_stake_acc.key,
         rent.minimum_balance(stake::state::StakeStateV2::size_of()),
