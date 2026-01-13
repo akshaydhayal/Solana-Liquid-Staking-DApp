@@ -66,13 +66,14 @@ const PendingWithdrawlsCard = () => {
                     ) : (
                         <span className="px-2 py-1 bg-orange-600/20 text-orange-400 text-xs rounded-full border border-orange-600/30">
                         {/* {withdrawal.unlockEpoch - withdrawal.currentEpoch} epochs</span> */}
-                        Claim after {currentEpoch - Number(userWithdrawData.requested_epoch)} epoch</span>
+                        {/* Claim after {currentEpoch - Number(userWithdrawData.requested_epoch)} epoch</span> */}
+                        Claim after 1 epoch</span>
                     )}
                 </div>
 
                  <button disabled={currentEpoch < (Number(userWithdrawData.requested_epoch)+1)}
                      className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:shadow-lg disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed py-2 rounded-lg text-sm font-medium transition-all">
-                     {currentEpoch >= (Number(userWithdrawData.requested_epoch)+1) ? 'Claim SOL Now' : 'Waiting...'}
+                     {currentEpoch >= (Number(userWithdrawData.requested_epoch)+1) ? 'Claim SOL Now' : 'Waiting for epoch end...'}
                  </button>
             </div>
         ) : (

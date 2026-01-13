@@ -127,11 +127,11 @@ const UnstakeCard = () => {
             <Clock size={20} className="text-orange-400 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-gray-300">
                 <p className="font-medium text-white mb-1">Unstaking Period</p>
-                Unstaking requires ~2-3 epochs (4-6 days). You can claim your SOL once the cooldown period ends.
+                Unstaking requires 1 epoch (max 2 days). You can claim your SOL once the cooldown period ends.
             </div>
         </div>
 
-        <button disabled={!userAddress.user_address || !unstakeAmount} onClick={unstakeLST} className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed py-4 rounded-xl font-semibold text-lg transition-all">
+        <button disabled={!userAddress.user_address || !unstakeAmount} onClick={unstakeLST} className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed py-4 rounded-xl font-semibold text-lg transition-all cursor-pointer">
             {!userAddress.user_address ? 'Connect Wallet' : 'Burn LST & Request Unstake'}
         </button>
     </div>

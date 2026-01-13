@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { TrendingUp, TrendingDown, Wallet, Database, Settings, Clock, CheckCircle, AlertCircle } from 'lucide-react';
-import Navbar from '../components/Navbar';
+import { TrendingUp, TrendingDown, Database } from 'lucide-react';
 import AdminStats from '../components/AdminStats';
 import AdminSplitStakeAccounts from '../components/AdminSplitStakeAccounts';
 import AdminStakeAccounts from '../components/AdminStakeAccounts';

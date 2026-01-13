@@ -56,40 +56,50 @@ pub fn unstake_sol(program_id:&Pubkey, accounts:&[AccountInfo], stake_acc_index:
     if *lst_manager_vault_pda.key!=lst_manager_vault_derived{
         return Err(LSTErrors::LSTManagerVaultPdaMismatch.into());
     }
-
+    msg!("a");
     let stake_registry_record_seeds=&["stake_registry_record".as_bytes(), lst_manager_pda.key.as_ref(), &stake_registry_record_bump.to_le_bytes()];
     let stake_registry_record_derived=Pubkey::create_program_address(stake_registry_record_seeds, program_id)?;
+    msg!("b");
     if *stake_registry_record_pda.key!=stake_registry_record_derived{
         return Err(LSTErrors::StakeRegistryPdaMismatch.into());
     }
-
+    msg!("c");
+    
     let rent=Rent::get()?;
     let clock=Clock::get()?;
     
     let epoch_withdraw_seeds:&[&[u8]]=&[b"epoch_withdraw", &clock.epoch.to_le_bytes(), &[epoch_withdraw_bump]];
+    msg!("d");
     let epoch_withdraw_derived=Pubkey::create_program_address(epoch_withdraw_seeds, program_id)?;
     if epoch_withdraw_derived!=*epoch_withdraw_pda.key{
         return Err(LSTErrors::EpochWithdrawPdaMismatch.into());
     }
-
+    msg!("e");
+    
     let mut stake_registry_record_data=StakeRegistryRecord::try_from_slice(&stake_registry_record_pda.data.borrow())?; 
     let stake_acc_seeds=&["stake_acc".as_bytes(), &stake_acc_index.to_le_bytes(), &lst_manager_pda.key.to_bytes(), &[stake_acc_bump]];
     let stake_acc_pda_derived=Pubkey::create_program_address(stake_acc_seeds, program_id)?;
+    msg!("f");
     if *stake_acc.key!=stake_acc_pda_derived{
         return Err(LSTErrors::StakePdaMismatch.into());
     }
-
+    msg!("g");
+    
     //@q how about in this split stake acc we, use like a index count instead of epoch
     let split_stake_acc_seeds=&["split_stake_acc".as_bytes(), &stake_registry_record_data.next_split_index.to_le_bytes(), lst_manager_pda.key.as_ref(), &[split_stake_acc_bump]];
     let split_stake_acc_derived=Pubkey::create_program_address(split_stake_acc_seeds, program_id)?;
+    msg!("h");
     if *split_stake_acc.key!=split_stake_acc_derived{
         return Err(LSTErrors::SplitStakePdaMismatch.into());
     }
+    msg!("i");
     
     let mut epoch_withdraw_pda_data=EpochWithdraw::try_from_slice(&epoch_withdraw_pda.data.borrow())?;
+    msg!("j");
     if epoch_withdraw_pda_data.finalised{
         return Err(LSTErrors::EpochWithdrawAlreadyFinalised.into());
     }    
+    msg!("k");
     //steps:
     //another unstake ix for admin to call,     
     //admin check, then check if epoch withdraw is still not finalised
@@ -105,6 +115,7 @@ pub fn unstake_sol(program_id:&Pubkey, accounts:&[AccountInfo], stake_acc_index:
     let create_split_stake_acc_ix=create_account(user.key, split_stake_acc.key,
         rent.minimum_balance(stake::state::StakeStateV2::size_of()),
         stake::state::StakeStateV2::size_of() as u64, &stake::program::ID);
+    msg!("l");
     invoke_signed(&create_split_stake_acc_ix,
         &[user.clone(), split_stake_acc.clone(), system_prog.clone()],
         &[split_stake_acc_seeds])?;

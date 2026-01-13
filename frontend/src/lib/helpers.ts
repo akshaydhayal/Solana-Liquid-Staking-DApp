@@ -63,6 +63,8 @@ export async function checkIfUserIsAdmin(connection:Connection, user:PublicKey){
 export async function getNextStakePdaAccount(connection:Connection){
     let stakeRegistryPdaData=await connection.getAccountInfo(stakeRegistryRecordPda);
     let deserialisedStakeRegistryPdaData=borsh.deserialize(StakeRegistryRecordSchema, stakeRegistryPdaData?.data);
+    
+    // if(!deserialisedStakeRegistryPdaData){return null}
     let nextStakeIndex=Number(deserialisedStakeRegistryPdaData.next_stake_index);    
     let serialisedNextStakeIndex=borsh.serialize(valueToU64Schema, {value:nextStakeIndex});    
     console.log("nextStakeIndex : ",nextStakeIndex);
@@ -70,4 +72,18 @@ export async function getNextStakePdaAccount(connection:Connection){
 
     let [nextStakeAccPda,nextStakeAccBump]=PublicKey.findProgramAddressSync([Buffer.from("stake_acc"), Buffer.from(serialisedNextStakeIndex), lstManagerPda.toBuffer()], PROGRAM_ID)
     return {nextStakeAccPda , nextStakeAccBump};
+} 
+
+export async function getNextSplitPdaAccount(connection:Connection){
+    let stakeRegistryPdaData=await connection.getAccountInfo(stakeRegistryRecordPda);
+    let deserialisedStakeRegistryPdaData=borsh.deserialize(StakeRegistryRecordSchema, stakeRegistryPdaData?.data);
+    
+    if(!deserialisedStakeRegistryPdaData){return null}
+    
+    let nextSplitIndex=Number(deserialisedStakeRegistryPdaData.next_split_index);    
+    let serialisedNextSplitIndex=borsh.serialize(valueToU64Schema, {value:nextSplitIndex});    
+    console.log("nextSplitIndex : ",nextSplitIndex);
+
+    let [nextSplitAccPda,nextSplitAccBump]=PublicKey.findProgramAddressSync([Buffer.from("split_stake_acc"), Buffer.from(serialisedNextSplitIndex), lstManagerPda.toBuffer()], PROGRAM_ID)
+    return {nextSplitAccPda , nextSplitAccBump};
 } 

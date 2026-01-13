@@ -6,20 +6,23 @@ import { stakeAccountsSchema, StakeRegistryRecordSchema, valueToU64Schema } from
 import { Buffer } from 'buffer';
 import { LAMPORTS_PER_SOL, PublicKey, StakeProgram } from '@solana/web3.js';
 import { useEffect, useState } from 'react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { stakeAccountsState } from '../state/stakeAccountsState';
 
-type stakeAccountsType={index:number,pubkey:string, stakeAmount:number, activatedEpoch:number};
+export type stakeAccountsType={index:number,pubkey:string, stakeAmount:number, activatedEpoch:number}[];
 
 const AdminStakeAccounts = () => {
   let {connection}=useConnection();
-  const [activeStakeAccounts,setActiveStateAccounts]=useState<stakeAccountsType[]>([]);
+  // const [activeStakeAccounts,setActiveStateAccounts]=useState<stakeAccountsType>([]);
   
+  let [activeStakeAccounts,setActiveStateAccounts]=useRecoilState(stakeAccountsState);
   useEffect(()=>{
     async function getAllActiveStakeAccounts(){
       let stakeRegistryPdaData=await connection.getAccountInfo(stakeRegistryRecordPda);
       let deserialisedStakeRegistryPdaData=borsh.deserialize(StakeRegistryRecordSchema, stakeRegistryPdaData?.data);
       let totalStakeAccCount=Number(deserialisedStakeRegistryPdaData.next_stake_index)-1; 
   
-      let stakeAccount:stakeAccountsType[]=[];
+      let stakeAccount:stakeAccountsType=[];
       for(let i=1; i<=totalStakeAccCount; i++){
           let serialisedStakeIndex=borsh.serialize(valueToU64Schema, {value:i});    
           let [stakeAccPda,stakeAccBump]=PublicKey.findProgramAddressSync([Buffer.from("stake_acc"), Buffer.from(serialisedStakeIndex), lstManagerPda.toBuffer()], PROGRAM_ID)
