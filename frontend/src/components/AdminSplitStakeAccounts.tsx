@@ -72,8 +72,8 @@ const AdminSplitStakeAccounts = () => {
   //   { index: 2, address: '5pD9...zX6w', amount: 3000, status: 'deactivating', unlockEpoch: 1007, currentEpoch: 1005 },
   // ];
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+    <div className="bg-gradient-to-br from-gray-800/90 via-gray-800/80 to-gray-800/90 backdrop-blur-sm rounded-2xl border-2 border-purple-500/20 shadow-lg shadow-purple-500/10 p-6">
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
         <Database size={20} className="text-purple-400" />Split Stake Accounts</h3>
         <div className="space-y-3">
         {/* {splitStakeAccounts.map((acc) => ( */}
@@ -95,7 +95,7 @@ const AdminSplitStakeAccounts = () => {
                 )}
             </div>
             {/* <div className="text-lg font-semibold">{acc.amount.toLocaleString()} SOL</div> */}
-            <div className="text-lg font-semibold">{acc.stakeAmount/LAMPORTS_PER_SOL} SOL</div>
+            <div className="text-lg font-semibold text-white">{acc.stakeAmount/LAMPORTS_PER_SOL} SOL</div>
             <div className="text-xs text-gray-400 mt-1">Deactivation Epoch : {acc.deactivationEpoch}</div>
             <div className="text-xs text-gray-400 mt-1">Current Epoch : {currentEpoch}</div>
             {/* <div className="text-xs text-gray-400 mt-1">Unlock: Epoch {acc.unlockEpoch}</div> */}

@@ -67,14 +67,14 @@ async function stakeVaultSolToValidator(){
   }
 
   return (
-    <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-        <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+    <div className="bg-gradient-to-br from-gray-800/90 via-gray-800/80 to-gray-800/90 backdrop-blur-sm rounded-2xl border-2 border-green-500/20 shadow-lg shadow-green-500/10 p-6">
+        <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
             <TrendingUp size={22} className="text-green-400" />Stake Vault SOL</h3>
 
         <div className="space-y-4">
             <div>
-                <label className="text-sm text-gray-400 mb-2 block">Available Vault Balance</label>
-                <div className="text-3xl font-bold mb-4">{vaultBalance/LAMPORTS_PER_SOL} SOL</div>
+                <label className="text-sm text-green-300 mb-2 block">Available Vault Balance</label>
+                <div className="text-3xl font-bold mb-4 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">{vaultBalance/LAMPORTS_PER_SOL} SOL</div>
             </div>
 
             {/* <div>
@@ -101,7 +101,7 @@ async function stakeVaultSolToValidator(){
                 </div>
             </div>
 
-            <button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:shadow-xl py-4 rounded-xl text-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            <button className="w-full bg-gradient-to-r from-green-600 via-emerald-600 to-teal-500 hover:from-green-500 hover:via-emerald-500 hover:to-teal-400 hover:shadow-2xl hover:shadow-green-500/50 py-4 rounded-xl text-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-white"
                 onClick={stakeVaultSolToValidator}>Stake Vault SOL to Validator
                 {/* disabled={!stakeAmount || parseFloat(stakeAmount) <= 0}>Stake Vault SOL to Validator */}
             </button>

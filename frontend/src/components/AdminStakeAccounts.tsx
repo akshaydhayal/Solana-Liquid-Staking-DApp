@@ -50,8 +50,8 @@ const AdminStakeAccounts = () => {
   },[connection])
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+    <div className="bg-gradient-to-br from-gray-800/90 via-gray-800/80 to-gray-800/90 backdrop-blur-sm rounded-2xl border-2 border-green-500/20 shadow-lg shadow-green-500/10 p-6">
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
           <TrendingUp size={20} className="text-green-400" />Active Stake Accounts</h3>
         <div className="space-y-3">
           {activeStakeAccounts.map((acc) => (
@@ -60,7 +60,7 @@ const AdminStakeAccounts = () => {
                     <div className="font-mono text-xs text-gray-400 truncate">{acc.pubkey}</div>
                     <span className="px-2 py-0.5 bg-green-600/20 text-green-400 text-xs rounded-full border border-green-600/30">Active</span>
                 </div>
-                <div className="text-lg font-semibold">{(acc.stakeAmount/LAMPORTS_PER_SOL)} SOL</div>
+                <div className="text-lg font-semibold text-white">{(acc.stakeAmount/LAMPORTS_PER_SOL)} SOL</div>
                 <div className="text-xs text-gray-400 mt-1">Activation mmmmn Epoch: {acc.activatedEpoch}</div>
               </div>
           ))}

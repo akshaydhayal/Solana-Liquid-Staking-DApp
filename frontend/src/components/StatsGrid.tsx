@@ -37,13 +37,13 @@ const StatsGrid = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-8">  
         <StatCard label="Total Value Locked (TVL)" value={`${protocolTVL?protocolTVL/LAMPORTS_PER_SOL:'0'} SOL`}
-            icon={Coins} gradient="from-purple-600/20 to-purple-800/20 border border-purple-600/20"/>
+            icon={Coins} gradient=""/>
         <StatCard label="Total dSOL LST Supply" value={`${lstSupply} dSOL`}
-            icon={Coins} gradient="from-purple-600/20 to-purple-800/20 border border-purple-600/20"/>
+            icon={Coins} gradient=""/>
         <StatCard label="Current APY" value={`${stats.apy}%`} subtext="Est. annual yield"
-            icon={TrendingUp} gradient="from-blue-600/20 to-blue-800/20 border border-blue-600/20"/>
+            icon={TrendingUp} gradient=""/>
         <StatCard label="Exchange Rate" value={lstToSolexchangeRate.toString()} subtext="dSOL per SOL"
-            icon={ArrowDownUp} gradient="from-green-600/20 to-green-800/20 border border-green-600/20"/>
+            icon={ArrowDownUp} gradient=""/>
     </div>
   )
 }

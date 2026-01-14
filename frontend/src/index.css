@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+body {
+  background-color: rgb(3 7 18); /* gray-950 */
+  color: white;
+}
+
+#root {
+  min-height: 100vh;
+  background-color: rgb(3 7 18); /* gray-950 */
+}

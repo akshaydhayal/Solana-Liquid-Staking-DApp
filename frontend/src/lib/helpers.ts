@@ -13,8 +13,8 @@ export async function getProtocolTVL(connection:Connection){
 
     if(!deserialisedLstManagerPdaData){return;}
     //@ts-ignore
-    // let protocolTVL:number=lstManagerVaultPdaBal + Number(deserialisedLstManagerPdaData.total_sol_staked);
-    let protocolTVL:number=lstManagerVaultPdaBal + Number(deserialisedLstManagerPdaData.total_sol_staked) - Number(deserialisedLstManagerPdaData.total_pending_withdrawl_sol);
+    let protocolTVL:number=lstManagerVaultPdaBal + Number(deserialisedLstManagerPdaData.total_sol_staked);
+    // let protocolTVL:number=lstManagerVaultPdaBal + Number(deserialisedLstManagerPdaData.total_sol_staked) - Number(deserialisedLstManagerPdaData.total_pending_withdrawl_sol);
     return protocolTVL;
 }
 

@@ -57,18 +57,18 @@ const AdminWithdraw = () => {
   }
 
   return (
-    <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-        <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+    <div className="bg-gradient-to-br from-gray-800/90 via-gray-800/80 to-gray-800/90 backdrop-blur-sm rounded-2xl border-2 border-purple-500/20 shadow-lg shadow-purple-500/10 p-6">
+        <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
             <Database size={22} className="text-purple-400" />Withdraw from Split Stake
         </h3>
         <div className="space-y-4">
             <div>
-                <label className="text-sm text-gray-400 mb-2 block">Select Split Stake Account</label>
-                <select value={selectedSplitStake} onChange={(e) => setSelectedSplitStake(e.target.value)} className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500 transition-colors cursor-pointer">
-                    <option value="">Choose a split stake account...</option>
+                <label className="text-sm text-purple-300 mb-2 block">Select Split Stake Account</label>
+                <select value={selectedSplitStake} onChange={(e) => setSelectedSplitStake(e.target.value)} className="w-full bg-gradient-to-br from-gray-900/60 to-gray-900/40 border-2 border-purple-500/30 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500 focus:shadow-lg focus:shadow-purple-500/20 transition-all cursor-pointer">
+                    <option value="" className="bg-gray-900">Choose a split stake account...</option>
                     {/* {splitStakeAccounts.map((acc) => ( */}
                     {activeSplitAccounts.map((acc,ind) => (
-                    <option key={acc.index} value={ind} disabled={acc.withdrawReady == false}>
+                    <option key={acc.index} value={ind} disabled={acc.withdrawReady == false} className="bg-gray-900">
                         {acc.pubkey} -- {acc.stakeAmount/LAMPORTS_PER_SOL} SOL ({acc.withdrawReady?'Withdrawable':'Not Withdrawable'})
                         {/* {acc.address} - {acc.amount.toLocaleString()} SOL ({acc.status}) */}
                     </option>
@@ -82,7 +82,7 @@ const AdminWithdraw = () => {
                         <div>
                             <div className="text-gray-400">Amount</div>
                             {/* <div className="text-lg font-semibold">{splitStakeAccounts[parseInt(selectedSplitStake)].amount.toLocaleString()} SOL</div> */}
-                            <div className="text-lg font-semibold">{activeSplitAccounts[Number(selectedSplitStake)].stakeAmount/LAMPORTS_PER_SOL} SOL</div>
+                            <div className="text-lg font-semibold text-white">{activeSplitAccounts[Number(selectedSplitStake)].stakeAmount/LAMPORTS_PER_SOL} SOL</div>
                         </div>
                         <div>
                             <div className="text-gray-400">Withdrawable Status</div>
@@ -98,7 +98,7 @@ const AdminWithdraw = () => {
                         <div>
                             <div className="text-gray-400">Deactivation Epoch</div>
                             {/* <div className="text-lg font-semibold">{splitStakeAccounts[parseInt(selectedSplitStake)].unlockEpoch}</div> */}
-                            <div className="text-lg font-semibold">{activeSplitAccounts[Number(selectedSplitStake)].deactivationEpoch}</div>
+                            <div className="text-lg font-semibold text-white">{activeSplitAccounts[Number(selectedSplitStake)].deactivationEpoch}</div>
                         </div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@ const AdminWithdraw = () => {
                 </div>
             </div>
 
-            <button onClick={withdrawToUserWithdrawVault} className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:shadow-xl py-4 rounded-xl text-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            <button onClick={withdrawToUserWithdrawVault} className="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-rose-500 hover:from-purple-500 hover:via-pink-500 hover:to-rose-400 hover:shadow-2xl hover:shadow-purple-500/50 py-4 rounded-xl text-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-white"
                 disabled={!selectedSplitStake || activeSplitAccounts[Number(selectedSplitStake)]?.withdrawReady !== true}>Withdraw to Vault
                 {/* disabled={!selectedSplitStake || splitStakeAccounts[parseInt(selectedSplitStake)]?.status !== 'inactive'}>Withdraw to Vault */}
             </button>

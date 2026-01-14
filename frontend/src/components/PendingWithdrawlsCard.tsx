@@ -69,9 +69,9 @@ const PendingWithdrawlsCard = () => {
 //   ];
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-        <Clock size={20} />Pending Withdrawals</h3>
+    <div className="bg-gradient-to-br from-gray-800/90 via-gray-800/80 to-gray-800/90 backdrop-blur-sm rounded-2xl border border-green-500/20 shadow-lg shadow-green-500/10 p-6">
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+        <Clock size={20} className="text-green-400" />Pending Withdrawals</h3>
 
         {userAddress.user_address ? (
         <div className="space-y-3">
@@ -79,7 +79,7 @@ const PendingWithdrawlsCard = () => {
                 <div className="flex justify-between items-start mb-2">
                     <div>
                         {/* @ts-ignore */}
-                        <div className="text-xl font-semibold">{Number(userWithdrawData?.sol_amount_user_gets)/LAMPORTS_PER_SOL} SOL</div>
+                        <div className="text-xl font-semibold text-white">{Number(userWithdrawData?.sol_amount_user_gets)/LAMPORTS_PER_SOL} SOL</div>
                         {/* @ts-ignore */}
                         <div className="text-xs text-gray-400 mt-1">Requested Epoch: {Number(userWithdrawData.requested_epoch)}</div>
                         {/* @ts-ignore */}
@@ -101,13 +101,13 @@ const PendingWithdrawlsCard = () => {
 
                  {/* @ts-ignore */}
                  <button onClick={claimSolFromWithdrawVault} disabled={currentEpoch < (Number(userWithdrawData.requested_epoch)+1)}
-                     className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:shadow-lg disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed py-2 rounded-lg text-sm font-medium transition-all">
+                     className="w-full bg-gradient-to-r from-green-600 via-emerald-600 to-teal-500 hover:from-green-500 hover:via-emerald-500 hover:to-teal-400 hover:shadow-xl hover:shadow-green-500/50 disabled:from-gray-800 disabled:via-gray-800 disabled:to-gray-800 disabled:cursor-not-allowed disabled:text-gray-200 disabled:border-2 disabled:border-green-500/50 py-2 rounded-lg text-sm font-medium transition-all text-white">
                     {/* @ts-ignore */}
                      {currentEpoch >= (Number(userWithdrawData.requested_epoch)+1) ? 'Claim SOL Now' : 'Waiting for epoch end...'}
                  </button>
             </div>
         ) : (
-            <p className="ml-8 w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:shadow-lg disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed rounded-lg text-sm font-light transition-all">
+            <p className="text-gray-400 text-sm text-center py-4">
                 No Pending Withdrawls for User
             </p>
         )

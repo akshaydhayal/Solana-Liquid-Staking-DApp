@@ -87,20 +87,20 @@ const AdminUnstake = () => {
 
   console.log("selectedStakeAccount : ",selectedStakeAccount);
   return (
-    <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-        <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+    <div className="bg-gradient-to-br from-gray-800/90 via-gray-800/80 to-gray-800/90 backdrop-blur-sm rounded-2xl border-2 border-orange-500/20 shadow-lg shadow-orange-500/10 p-6">
+        <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">
             <TrendingDown size={22} className="text-orange-400" />Unstake SOL
         </h3>
 
         <div className="space-y-4">
             <div>
-                <label className="text-sm text-gray-400 mb-2 block">Select Stake Account</label>
+                <label className="text-sm text-orange-300 mb-2 block">Select Stake Account</label>
                 <select value={selectedStakeAccount} onChange={(e) => setSelectedStakeAccount(e.target.value)}
-                        className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 transition-colors cursor-pointer">
-                    <option value="">Choose a stake account...</option>
+                        className="w-full bg-gradient-to-br from-gray-900/60 to-gray-900/40 border-2 border-orange-500/30 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 focus:shadow-lg focus:shadow-orange-500/20 transition-all cursor-pointer">
+                    <option value="" className="bg-gray-900">Choose a stake account...</option>
                     {/* {stakeAccounts0.map((acc) => ( */}
                     {stakeAccounts.map((acc) => (
-                        <option key={acc.index} value={acc.index}>
+                        <option key={acc.index} value={acc.index} className="bg-gray-900">
                             {/* {acc.address} - {acc.amount.toLocaleString()} SOL */}
                             {acc.pubkey}  --  {acc.stakeAmount/LAMPORTS_PER_SOL} SOL
                         </option>
@@ -115,13 +115,13 @@ const AdminUnstake = () => {
                             <div className="text-gray-400">Stake Amount</div>
                             {/* <div className="text-lg font-semibold">{stakeAccounts0[parseInt(selectedStakeAccount)].amount.toLocaleString()} SOL</div> */}
                             {/* <div className="text-lg font-semibold">{(stakeAccounts[selectedStakeAccount-1].stakeAmount)/LAMPORTS_PER_SOL} SOL</div> */}
-                            <div className="text-lg font-semibold">{(stakeAccounts[Number(selectedStakeAccount)-1].stakeAmount)/LAMPORTS_PER_SOL} SOL</div>
+                            <div className="text-lg font-semibold text-white">{(stakeAccounts[Number(selectedStakeAccount)-1].stakeAmount)/LAMPORTS_PER_SOL} SOL</div>
                         </div>
                         <div>
                             <div className="text-gray-400">Current Epoch</div>
                             {/* <div className="text-lg font-semibold">{stakeAccounts0[parseInt(selectedStakeAccount)].epoch}</div> */}
                             {/* <div className="text-lg font-semibold">{stakeAccounts[selectedStakeAccount-1].activatedEpoch}</div> */}
-                            <div className="text-lg font-semibold">{stakeAccounts[Number(selectedStakeAccount)-1].activatedEpoch}</div>
+                            <div className="text-lg font-semibold text-white">{stakeAccounts[Number(selectedStakeAccount)-1].activatedEpoch}</div>
                         </div>
                     </div>
                 </div>
@@ -145,7 +145,7 @@ const AdminUnstake = () => {
                 <div className="bg-green-600/10 border border-green-500/30 rounded-lg p-4 text-green-300 text-sm">Withdraw request detected for this epoch. Unstake is allowed.</div>
             )}
 
-            <button onClick={unstakeSOLbySplitStake} className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:shadow-xl py-4 rounded-xl text-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            <button onClick={unstakeSOLbySplitStake} className="w-full bg-gradient-to-r from-orange-600 via-red-600 to-pink-500 hover:from-orange-500 hover:via-red-500 hover:to-pink-400 hover:shadow-2xl hover:shadow-orange-500/50 py-4 rounded-xl text-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-white"
                 disabled={!selectedStakeAccount || epochWithdrawExists === false}>Deactivate & Split Stake
             </button>
 

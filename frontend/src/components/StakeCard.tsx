@@ -79,38 +79,39 @@ const StakeCard = () => {
   return (
     <div className="space-y-6"> 
         <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">Amount to Stake</label>
+            <label className="block text-sm font-medium text-blue-300 mb-2">Amount to Stake</label>
             <div className="relative">
                 {/* <input type="number" value={stakeAmount? stakeAmount: ''} onChange={(e) => setStakeAmount(Number(e.target.value))} */}
                 {/* <input type="number" min="0" value={stakeAmount} onChange={(e) => setStakeAmount( (Number(e.target.value)>=0) ? Number(e.target.value): (Number(e.target.value)*-1))} */}
                 <input type="number" min="0" value={stakeAmount} onChange={(e) => setStakeAmount( (Number(e.target.value)>=0) ? Number(e.target.value): (Number(e.target.value)*-1))}
-                    placeholder="0.00" className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-4 text-2xl font-semibold focus:outline-none focus:border-purple-500 transition-colors"/>
+                    // placeholder="0.00" className="w-full bg-gradient-to-br from-gray-900/60 to-gray-900/40 border-2 border-blue-500/30 text-white rounded-xl px-4 py-4 text-2xl font-semibold focus:outline-none focus:border-blue-500 focus:shadow-lg focus:shadow-blue-500/20 transition-all"/>
+                    placeholder="0.00" className="w-full bg-gradient-to-br from-gray-900/60 to-gray-900/40 border-2 border-blue-500/30 text-blue-300 rounded-xl px-4 py-4 text-2xl font-semibold focus:outline-none focus:border-blue-500 focus:shadow-lg focus:shadow-blue-500/20 transition-all"/>
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                    <span className="text-gray-400 font-medium">SOL</span>
-                    <button className="text-sm text-purple-400 hover:text-purple-300 font-medium cursor-pointer" onClick={()=>{
+                    <span className="text-blue-300 font-medium">SOL</span>
+                    <button className="text-sm text-blue-400 hover:text-blue-300 font-medium cursor-pointer px-2 py-1 rounded hover:bg-blue-500/10 transition-colors" onClick={()=>{
                         setStakeAmount(userBalance/2);
                     }}>HALF</button>
-                    <button className="text-sm text-purple-400 hover:text-purple-300 font-medium cursor-pointer" onClick={()=>{
+                    <button className="text-sm text-blue-400 hover:text-blue-300 font-medium cursor-pointer px-2 py-1 rounded hover:bg-blue-500/10 transition-colors" onClick={()=>{
                         setStakeAmount(userBalance);
                     }}>MAX</button>
                 </div>
             </div>
             <div className="flex justify-between mt-2 text-sm text-gray-400">
-                <span>Balance: {userBalance} SOL</span>
+                <span>Balance: <span className="text-blue-300 font-medium">{userBalance} SOL</span></span>
                 {/* <span>≈ $12,525.00</span> */}
             </div>
         </div>
 
         <div className="flex items-center justify-center">
-            <div className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center border-2 border-gray-700">
-                <ArrowDownUp size={18} className="text-gray-400" />
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-full flex items-center justify-center border-2 border-blue-500/30 shadow-lg shadow-blue-500/10">
+                <ArrowDownUp size={20} className="text-blue-400" />
             </div>  
         </div>
 
         <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">You Will Receive</label>
-            <div className="bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-4">
-                <div className="text-2xl font-semibold">
+            <label className="block text-sm font-medium text-blue-300 mb-2">You Will Receive</label>
+            <div className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 border-2 border-blue-500/30 rounded-xl px-4 py-4 shadow-lg shadow-blue-500/10">
+                <div className="text-2xl font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                     {/* {stakeAmount ? (stakeAmount / parseFloat(stats.exchangeRate)).toFixed(4) : '0.00'} */}
                     {stakeAmount ? (stakeAmount / lstToSolExchangeRate).toFixed(4) : '0.00'}
                 </div>
@@ -118,16 +119,16 @@ const StakeCard = () => {
             </div>
         </div>
 
-        <div className="bg-purple-900/20 border border-purple-600/30 rounded-lg p-4 flex gap-3">
+        <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/20 border-2 border-purple-500/30 rounded-lg p-4 flex gap-3 shadow-lg shadow-purple-500/10">
             <Info size={20} className="text-purple-400 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-gray-300">
                 <p className="font-medium text-white mb-1">Instant Liquidity</p>
-                <p>Your dSOL LST tokens are immediately liquid and can be used in DeFi while earning staking rewards.</p>
+                <p className="text-gray-400">Your dSOL LST tokens are immediately liquid and can be used in DeFi while earning staking rewards.</p>
             </div>
         </div>
 
         <button disabled={!userAddress.user_address || !stakeAmount} onClick={stakeSOLToLST}
-             className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed py-4 rounded-xl font-semibold text-lg transition-all cursor-pointer">
+             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed py-4 rounded-xl font-semibold text-lg transition-all duration-200 cursor-pointer text-white shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30">
             {!userAddress.user_address? 'Connect Wallet' : 'Stake SOL'}
         </button>
     </div>
