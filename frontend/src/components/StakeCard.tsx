@@ -1,6 +1,6 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { ArrowDownUp, Info } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil';
 import { navState } from '../state/navState';
 import { Buffer } from 'buffer';
@@ -8,11 +8,10 @@ import * as borsh from "borsh";
 import { lstManagerBump, lstManagerPda, lstManagerVaultBump, lstManagerVaultPda, lstMintBump, lstMintPda, PROGRAM_ID } from '../lib/constants';
 import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, TransactionInstruction } from '@solana/web3.js';
 import * as spl from "@solana/spl-token";
+import { lstToSolExchangeRateState } from '../state/lstToSolExchangeRateState';
 
 let serialisedAmountSchema:borsh.Schema={
-    struct:{
-        amount:'u64'
-    }
+    struct:{amount:'u64'}
 }
 
 const StakeCard = () => {
@@ -22,29 +21,16 @@ const StakeCard = () => {
   let wallet=useWallet();
 
   let userAddress=useRecoilValue(navState);
+  let lstToSolExchangeRate=useRecoilValue(lstToSolExchangeRateState);
   console.log("user address : ",userAddress);
-  // Mock data
-  const stats = {
-    tvl: '12,450,000',
-    apy: '7.2',
-    exchangeRate: '1.042',
-    yourStake: '150.5',
-    yourLST: '144.3',
-    pendingUnstake: '25.0'
-  };
 
   async function stakeSOLToLST(){ 
-    if(!userAddress.user_address || !stakeAmount){
-        return;
-    }
+    if(!userAddress.user_address || !stakeAmount){return;}
     let serialisedDepositAmount=borsh.serialize(serialisedAmountSchema,{amount: stakeAmount*LAMPORTS_PER_SOL});
-    // console.log("serialisedDepositAmount :  ",serialisedDepositAmount);
     let userLstAta=spl.getAssociatedTokenAddressSync(lstMintPda, userAddress.user_address, false, spl.TOKEN_PROGRAM_ID);
-    console.log("user lst ata : ",userLstAta.toBase58());
 
     //need to create user lst ata here if not exist
     let userLstAtaDetails=await connection.getAccountInfo(userLstAta,"confirmed");
-    console.log("userLstAtaDetails : " ,userLstAtaDetails);
     let tx=new Transaction();
     if(!userLstAtaDetails){
         let userLstAtaCreateIx=spl.createAssociatedTokenAccountInstruction(userAddress.user_address,userLstAta,userAddress.user_address,lstMintPda,spl.TOKEN_PROGRAM_ID);
@@ -75,21 +61,26 @@ const StakeCard = () => {
     let txStatus=await wallet.sendTransaction(tx,connection);
     // let txStatus=await connection.sendRawTransaction(tx.serialize());
     await connection.confirmTransaction(txStatus,"confirmed");
-    console.log("tx status : ",txStatus);
+    console.log("user deposit sol tx status : ",txStatus);
 }
-  async function getUserBalance(user:PublicKey){
-    let userBal=await connection.getBalance(user);
-    console.log("user balance : ",userBal/LAMPORTS_PER_SOL);
-    setUserBalance(userBal/LAMPORTS_PER_SOL);
-  }
-  getUserBalance(userAddress.user_address);
+
+  useEffect(()=>{
+    async function getUserBalance(user:PublicKey){
+        let userBal=await connection.getBalance(user);
+        console.log("user balance : ",userBal/LAMPORTS_PER_SOL);
+        setUserBalance(userBal/LAMPORTS_PER_SOL);
+    }
+    if(userAddress.user_address){
+        getUserBalance(userAddress.user_address);
+    }
+  },[connection,wallet,userAddress])
 
   return (
     <div className="space-y-6">
         <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">Amount to Stakee</label>
+            <label className="block text-sm font-medium text-gray-400 mb-2">Amount to Stake</label>
             <div className="relative">
-                <input type="number" value={stakeAmount} onChange={(e) => setStakeAmount(Number(e.target.value))}
+                <input type="number" value={stakeAmount? stakeAmount: ''} onChange={(e) => setStakeAmount(Number(e.target.value))}
                     placeholder="0.00" className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-4 text-2xl font-semibold focus:outline-none focus:border-purple-500 transition-colors"/>
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
                     <span className="text-gray-400 font-medium">SOL</span>
@@ -102,9 +93,8 @@ const StakeCard = () => {
                 </div>
             </div>
             <div className="flex justify-between mt-2 text-sm text-gray-400">
-                {/* <span>Balance: 250.5 SOL</span> */}
                 <span>Balance: {userBalance} SOL</span>
-                <span>≈ $12,525.00</span>
+                {/* <span>≈ $12,525.00</span> */}
             </div>
         </div>
 
@@ -118,10 +108,10 @@ const StakeCard = () => {
             <label className="block text-sm font-medium text-gray-400 mb-2">You Will Receive</label>
             <div className="bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-4">
                 <div className="text-2xl font-semibold">
-                    {/* {stakeAmount ? (parseFloat(stakeAmount) / parseFloat(stats.exchangeRate)).toFixed(4) : '0.00'} */}
-                    {stakeAmount ? (stakeAmount / parseFloat(stats.exchangeRate)).toFixed(4) : '0.00'}
+                    {/* {stakeAmount ? (stakeAmount / parseFloat(stats.exchangeRate)).toFixed(4) : '0.00'} */}
+                    {stakeAmount ? (stakeAmount / lstToSolExchangeRate).toFixed(4) : '0.00'}
                 </div>
-                <div className="text-sm text-gray-400 mt-1">LST Tokens</div>
+                <div className="text-sm text-gray-400 mt-1">dSOL LST Tokens</div>
             </div>
         </div>
 
@@ -129,7 +119,7 @@ const StakeCard = () => {
             <Info size={20} className="text-purple-400 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-gray-300">
                 <p className="font-medium text-white mb-1">Instant Liquidity</p>
-                <p>Your LST tokens are immediately liquid and can be used in DeFi while earning staking rewards.</p>
+                <p>Your dSOL LST tokens are immediately liquid and can be used in DeFi while earning staking rewards.</p>
             </div>
         </div>
 
@@ -140,5 +130,4 @@ const StakeCard = () => {
     </div>
   )
 }
-
 export default StakeCard

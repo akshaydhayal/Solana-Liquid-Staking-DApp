@@ -37,7 +37,7 @@ const UserPage = () => {
                     {/* Tabs */}
                     <div className="flex gap-3 mb-6">
                         <TabButton id="stake" label="Stake SOL" icon={TrendingUp} />
-                        <TabButton id="unstake" label="Unstake" icon={ArrowDownUp} />
+                        <TabButton id="unstake" label="Unstake dSOL" icon={ArrowDownUp} />
                     </div>
                     {activeTab === 'stake' ? (<StakeCard/>) : (<UnstakeCard/>)}
                 </div>

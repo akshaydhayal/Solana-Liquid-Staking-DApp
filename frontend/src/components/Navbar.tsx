@@ -34,7 +34,7 @@ const Navbar = () => {
                     <TrendingUp size={24} />
                 </div>
                 <div>
-                    <h1 className="text-xl font-bold">SolStake</h1>
+                    <h1 className="text-xl font-bold">Devnet SolStake</h1>
                     <p className="text-xs text-gray-400">Liquid Staking Protocol</p>
                 </div>
             </div>

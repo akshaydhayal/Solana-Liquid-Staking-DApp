@@ -56,7 +56,7 @@ const AdminStakeAccounts = () => {
                     <span className="px-2 py-0.5 bg-green-600/20 text-green-400 text-xs rounded-full border border-green-600/30">Active</span>
                 </div>
                 <div className="text-lg font-semibold">{(acc.stakeAmount/LAMPORTS_PER_SOL)} SOL</div>
-                <div className="text-xs text-gray-400 mt-1">Epoch: {acc.activatedEpoch}</div>
+                <div className="text-xs text-gray-400 mt-1">Activation mmmmn Epoch: {acc.activatedEpoch}</div>
               </div>
           ))}
         </div>
