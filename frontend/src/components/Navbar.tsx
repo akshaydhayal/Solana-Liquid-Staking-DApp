@@ -9,19 +9,17 @@ import { lstManagerPda, lstManagerVaultPda, lstMintPda } from '../lib/constants'
 const Navbar = () => {
   let wallet=useWallet();
   let [userAddress,setUserAddress]=useRecoilState(navState);
-  console.log("user address : ",userAddress.user_address?.toBase58());
-  console.log("lst manager pda : ",lstManagerPda?.toBase58());
-  console.log("lst manager vault pda : ",lstManagerVaultPda?.toBase58());
-  console.log("lst mint pda : ",lstMintPda?.toBase58());
   
   useEffect(()=>{
-    // if (wallet.publicKey){
-    //     setUserAddress({user_address:wallet.publicKey})
-    // }else{
-    //     setUserAddress({user_address:null})
-    // }
-    wallet.publicKey? setUserAddress({user_address:wallet.publicKey}) : setUserAddress({user_address:null});
+      wallet.publicKey? setUserAddress({user_address:wallet.publicKey}) : setUserAddress({user_address:null});
+      
+      console.log("user address : ",userAddress.user_address?.toBase58());
+      console.log("lst manager pda : ",lstManagerPda?.toBase58());
+      console.log("lst manager vault pda : ",lstManagerVaultPda?.toBase58());
+      console.log("lst mint pda : ",lstMintPda?.toBase58());
   },[wallet]);
+//   },[]);
+
   return (
     <div className="border-b border-purple-500/20 backdrop-blur-sm bg-gradient-to-r from-gray-900/95 via-gray-900/90 to-gray-900/95 shadow-lg shadow-purple-500/5">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">

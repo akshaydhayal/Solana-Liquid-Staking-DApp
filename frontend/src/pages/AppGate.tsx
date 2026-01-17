@@ -10,6 +10,7 @@ const AppGate = () => {
   let {connection}=useConnection();
   let userAddress=useRecoilValue(navState);
   const [isUserAdmin, setIsUserAdmin]=useState(false);
+
   useEffect(()=>{
       async function checkIsUserAdmin(){
           if(userAddress.user_address){
@@ -21,6 +22,7 @@ const AppGate = () => {
       }
       checkIsUserAdmin();
   },[connection, userAddress])
+  // },[])
   
   return (
     <div>

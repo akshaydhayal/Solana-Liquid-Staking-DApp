@@ -5,7 +5,7 @@ import * as spl from "@solana/spl-token";
 import { PublicKey, type Connection } from "@solana/web3.js";
 import { Buffer } from "buffer";
 
-export async function getProtocolTVL(connection:Connection){    
+export async function getProtocolStats(connection:Connection){    
     let lstManagerVaultPdaBal=await connection.getBalance(lstManagerVaultPda,"confirmed") - await connection.getMinimumBalanceForRentExemption(0,"confirmed");    
     let lstManagerPdaData=await connection.getAccountInfo(lstManagerPda,"confirmed");
     if(!lstManagerPdaData){return;}
@@ -13,9 +13,16 @@ export async function getProtocolTVL(connection:Connection){
 
     if(!deserialisedLstManagerPdaData){return;}
     //@ts-ignore
-    let protocolTVL:number=lstManagerVaultPdaBal + Number(deserialisedLstManagerPdaData.total_sol_staked);
-    // let protocolTVL:number=lstManagerVaultPdaBal + Number(deserialisedLstManagerPdaData.total_sol_staked) - Number(deserialisedLstManagerPdaData.total_pending_withdrawl_sol);
-    return protocolTVL;
+    // let protocolTVL:number=lstManagerVaultPdaBal + Number(deserialisedLstManagerPdaData.total_sol_staked);
+    // return {protocolTVL,protocolActivePendingWithdrawls};
+    
+    //@ts-ignore
+    let protocolTVL:number=lstManagerVaultPdaBal + Number(deserialisedLstManagerPdaData.total_sol_staked) - Number(deserialisedLstManagerPdaData.total_pending_withdrawl_sol);
+    //@ts-ignore
+    let protocolActivePendingWithdrawls:number= Number(deserialisedLstManagerPdaData.total_pending_withdrawl_sol);
+    //@ts-ignore
+    let protocolActiveStaked:number= Number(deserialisedLstManagerPdaData.total_sol_staked);
+    return {protocolTVL, protocolActivePendingWithdrawls, protocolActiveStaked};
 }
 
 export async function getLSTMintSupply(connection:Connection){

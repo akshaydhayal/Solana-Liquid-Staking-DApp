@@ -28,6 +28,8 @@ const PendingWithdrawlsCard = () => {
         console.log("data : ",userWithdrawRequestData);
         //@ts-ignore
         setUserWithdrawData(userWithdrawRequestData);
+        // user_withdraw_request_data.withdraw_status=UserWithdrawStatus::COMPLETED;
+
     }
     async function getCurrentEpoch(){
         let epoch=(await connection.getEpochInfo()).epoch;
@@ -80,6 +82,8 @@ const PendingWithdrawlsCard = () => {
                     <div>
                         {/* @ts-ignore */}
                         <div className="text-xl font-semibold text-white">{Number(userWithdrawData?.sol_amount_user_gets)/LAMPORTS_PER_SOL} SOL</div>
+                        {/* @ts-ignore */}
+                        <div className="text-xs text-gray-400 mt-1">Withdraw Status: {Number(userWithdrawData.withdraw_status)}</div>
                         {/* @ts-ignore */}
                         <div className="text-xs text-gray-400 mt-1">Requested Epoch: {Number(userWithdrawData.requested_epoch)}</div>
                         {/* @ts-ignore */}

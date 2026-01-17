@@ -77,7 +77,7 @@ const AdminSplitStakeAccounts = () => {
         <Database size={20} className="text-purple-400" />Split Stake Accounts</h3>
         <div className="space-y-3">
         {/* {splitStakeAccounts.map((acc) => ( */}
-        {activeSplitAccounts.length>0 && activeSplitAccounts.map((acc) => (
+        {activeSplitAccounts.length>0 ? activeSplitAccounts.map((acc) => (
             <div key={acc.index} className="bg-gray-900/50 rounded-lg p-3 border border-gray-700/50">
             <div className="flex justify-between items-start mb-2"> 
                 {/* <div className="font-mono text-xs text-gray-400">{acc.address}</div> */}
@@ -101,7 +101,11 @@ const AdminSplitStakeAccounts = () => {
             {/* <div className="text-xs text-gray-400 mt-1">Unlock: Epoch {acc.unlockEpoch}</div> */}
             <div className="text-xs text-gray-400 mt-1">Split Index: {acc.index}</div>
             </div>
-        ))}
+        )):
+        (
+          <p className="text-gray-400 text-sm text-center py-4">No Active Split Stake accounts</p>
+        )
+        }
         </div>
     </div>
   )
