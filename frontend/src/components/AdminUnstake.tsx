@@ -84,7 +84,7 @@ const AdminUnstake = () => {
     let txStatus=await wallet.sendTransaction(tx,connection);
     await connection.confirmTransaction(txStatus,"confirmed");
     const explorerUrl=`https://explorer.solana.com/tx/${txStatus}?cluster=devnet`;
-    toast.success(<a className="underline" href={explorerUrl} target="_blank" rel="noreferrer">Admin unstake submitted: view on Explorer</a>);
+    toast.success(<a className="underline" href={explorerUrl} target="_blank" rel="noreferrer">SOL was unstaked from validator successfully! View on Explorer</a>);
     console.log("unstake sol by split accounts txStatus",txStatus);
   }
 

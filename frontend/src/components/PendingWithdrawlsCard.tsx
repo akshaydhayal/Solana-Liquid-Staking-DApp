@@ -64,7 +64,7 @@ const PendingWithdrawlsCard = () => {
     let txStatus=await wallet.sendTransaction(tx,connection);
     await connection.confirmTransaction(txStatus,"confirmed");
     const explorerUrl=`https://explorer.solana.com/tx/${txStatus}?cluster=devnet`;
-    toast.success(<a className="underline" href={explorerUrl} target="_blank" rel="noreferrer">Claim submitted: view on Explorer</a>);
+    toast.success(<a className="underline" href={explorerUrl} target="_blank" rel="noreferrer">Your SOL was claimed successfully! View on Explorer</a>);
     console.log("claim sol txStatus : ",txStatus);
   }
   // Mock data

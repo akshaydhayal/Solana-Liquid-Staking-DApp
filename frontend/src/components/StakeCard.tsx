@@ -1,5 +1,5 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { ArrowDownUp, Info } from 'lucide-react'
+import { ArrowDown, Info } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil';
 import { navState } from '../state/navState';
@@ -29,6 +29,10 @@ const StakeCard = () => {
 
   async function stakeSOLToLST(){ 
     if(!userAddress.user_address || !stakeAmount){return;}
+    if(stakeAmount > userBalance){
+      toast.error(`Insufficient balance. You have ${userBalance} SOL but trying to stake ${stakeAmount} SOL.`);
+      return;
+    }
     let serialisedDepositAmount=borsh.serialize(serialisedAmountSchema,{amount: stakeAmount*LAMPORTS_PER_SOL});
     let userLstAta=spl.getAssociatedTokenAddressSync(lstMintPda, userAddress.user_address, false, spl.TOKEN_PROGRAM_ID);
 
@@ -65,7 +69,7 @@ const StakeCard = () => {
     // let txStatus=await connection.sendRawTransaction(tx.serialize());
     await connection.confirmTransaction(txStatus,"confirmed");
     const explorerUrl=`https://explorer.solana.com/tx/${txStatus}?cluster=devnet`;
-    toast.success(<a className="underline" href={explorerUrl} target="_blank" rel="noreferrer">Stake submitted: view on Explorer</a>);
+    toast.success(<a className="underline" href={explorerUrl} target="_blank" rel="noreferrer">Your deposit was staked successfully! View on Explorer</a>);
     setTxSig(txStatus);
     console.log("user deposit sol tx status : ",txStatus);
 }
@@ -82,59 +86,58 @@ const StakeCard = () => {
   },[connection,wallet,userAddress, txSig])
 
   return (
-    <div className="space-y-6"> 
+    <div className="space-y-3"> 
         <div>
-            <label className="block text-sm font-medium text-blue-300 mb-2">Amount to Stake</label>
+            <label className="block text-sm font-medium text-blue-300 mb-1.5">Amount to Stake</label>
             <div className="relative">
-                {/* <input type="number" value={stakeAmount? stakeAmount: ''} onChange={(e) => setStakeAmount(Number(e.target.value))} */}
-                {/* <input type="number" min="0" value={stakeAmount} onChange={(e) => setStakeAmount( (Number(e.target.value)>=0) ? Number(e.target.value): (Number(e.target.value)*-1))} */}
                 <input type="number" min="0" value={stakeAmount} onChange={(e) => setStakeAmount( (Number(e.target.value)>=0) ? Number(e.target.value): (Number(e.target.value)*-1))}
-                    // placeholder="0.00" className="w-full bg-gradient-to-br from-gray-900/60 to-gray-900/40 border-2 border-blue-500/30 text-white rounded-xl px-4 py-4 text-2xl font-semibold focus:outline-none focus:border-blue-500 focus:shadow-lg focus:shadow-blue-500/20 transition-all"/>
-                    placeholder="0.00" className="w-full bg-gradient-to-br from-gray-900/60 to-gray-900/40 border-2 border-blue-500/30 text-blue-300 rounded-xl px-4 py-4 text-2xl font-semibold focus:outline-none focus:border-blue-500 focus:shadow-lg focus:shadow-blue-500/20 transition-all"/>
+                    placeholder="0.00" className={`w-full bg-gradient-to-br from-gray-900/60 to-gray-900/40 border-2 ${stakeAmount > userBalance ? 'border-red-500/50' : 'border-blue-500/30'} text-blue-300 rounded-xl px-4 py-3 text-xl font-semibold focus:outline-none focus:border-blue-500 focus:shadow-lg focus:shadow-blue-500/20 transition-all`}/>
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                    <span className="text-blue-300 font-medium">SOL</span>
-                    <button className="text-sm text-blue-400 hover:text-blue-300 font-medium cursor-pointer px-2 py-1 rounded hover:bg-blue-500/10 transition-colors" onClick={()=>{
+                    <span className="text-blue-300 font-medium text-sm">SOL</span>
+                    <button className="text-xs text-blue-400 hover:text-blue-300 font-medium cursor-pointer px-2 py-0.5 rounded hover:bg-blue-500/10 transition-colors" onClick={()=>{
                         setStakeAmount(userBalance/2);
                     }}>HALF</button>
-                    <button className="text-sm text-blue-400 hover:text-blue-300 font-medium cursor-pointer px-2 py-1 rounded hover:bg-blue-500/10 transition-colors" onClick={()=>{
+                    <button className="text-xs text-blue-400 hover:text-blue-300 font-medium cursor-pointer px-2 py-0.5 rounded hover:bg-blue-500/10 transition-colors" onClick={()=>{
                         setStakeAmount(userBalance);
                     }}>MAX</button>
                 </div>
             </div>
-            <div className="flex justify-between mt-2 text-sm text-gray-400">
+            <div className="flex justify-between mt-1.5 text-xs text-gray-400">
                 <span>Balance: <span className="text-blue-300 font-medium">{userBalance} SOL</span></span>
-                {/* <span>≈ $12,525.00</span> */}
             </div>
+            {stakeAmount > userBalance && (
+                <div className="mt-1 text-xs text-red-400 font-medium">
+                    Insufficient balance. You have {userBalance} SOL but trying to stake {stakeAmount} SOL.
+                </div>
+            )}
         </div>
 
-        <div className="flex items-center justify-center">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-full flex items-center justify-center border-2 border-blue-500/30 shadow-lg shadow-blue-500/10">
-                <ArrowDownUp size={20} className="text-blue-400" />
+        <div className="flex items-center justify-center py-1">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-full flex items-center justify-center border-2 border-blue-500/30 shadow-md shadow-blue-500/10">
+                <ArrowDown size={16} className="text-blue-400" />
             </div>  
         </div>
 
         <div>
-            <label className="block text-sm font-medium text-blue-300 mb-2">You Will Receive</label>
-            <div className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 border-2 border-blue-500/30 rounded-xl px-4 py-4 shadow-lg shadow-blue-500/10">
-                <div className="text-2xl font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    {/* {stakeAmount ? (stakeAmount / parseFloat(stats.exchangeRate)).toFixed(4) : '0.00'} */}
+            <label className="block text-sm font-medium text-blue-300 mb-1.5">You Will Receive</label>
+            <div className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 border-2 border-blue-500/30 rounded-xl px-4 py-3 shadow-lg shadow-blue-500/10">
+                <div className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                     {stakeAmount ? (stakeAmount / lstToSolExchangeRate).toFixed(4) : '0.00'}
                 </div>
-                <div className="text-sm text-gray-400 mt-1">dSOL LST Tokens</div>
+                <div className="text-xs text-gray-400 mt-0.5">dSOL LST Tokens</div>
             </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/20 border-2 border-purple-500/30 rounded-lg p-4 flex gap-3 shadow-lg shadow-purple-500/10">
-            <Info size={20} className="text-purple-400 flex-shrink-0 mt-0.5" />
-            <div className="text-sm text-gray-300">
-                <p className="font-medium text-white mb-1">Instant Liquidity</p>
+        <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/20 border-2 border-purple-500/30 rounded-lg p-3 flex gap-2 shadow-lg shadow-purple-500/10">
+            <Info size={16} className="text-purple-400 flex-shrink-0 mt-0.5" />
+            <div className="text-xs text-gray-300">
+                <p className="font-medium text-white mb-0.5">Instant Liquidity</p>
                 <p className="text-gray-400">Your dSOL LST tokens are immediately liquid and can be used in DeFi while earning staking rewards.</p>
             </div>
         </div>
-        <p> txSig : {txSig}</p>
 
-        <button disabled={!userAddress.user_address || !stakeAmount} onClick={stakeSOLToLST}
-             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed py-4 rounded-xl font-semibold text-lg transition-all duration-200 cursor-pointer text-white shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30">
+        <button disabled={!userAddress.user_address || !stakeAmount || stakeAmount > userBalance} onClick={stakeSOLToLST}
+             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed py-3 rounded-xl font-semibold text-base transition-all duration-200 cursor-pointer text-white shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30">
             {!userAddress.user_address? 'Connect Wallet' : 'Stake SOL'}
         </button>
     </div>

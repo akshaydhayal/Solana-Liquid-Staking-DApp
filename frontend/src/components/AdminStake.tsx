@@ -76,7 +76,7 @@ async function stakeVaultSolToValidator(){
     let txStatus=await wallet.sendTransaction(tx,connection);
     await connection.confirmTransaction(txStatus,"confirmed");
     const explorerUrl=`https://explorer.solana.com/tx/${txStatus}?cluster=devnet`;
-    toast.success(<a className="underline" href={explorerUrl} target="_blank" rel="noreferrer">Admin stake submitted: view on Explorer</a>);
+    toast.success(<a className="underline" href={explorerUrl} target="_blank" rel="noreferrer">Vault SOL was staked to validator successfully! View on Explorer</a>);
     console.log("stake SOL txStatus : ",txStatus);
   }
 
