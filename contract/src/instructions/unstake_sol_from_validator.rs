@@ -17,12 +17,13 @@ use crate::state::{
 };
 use crate::maths::exchange_rate::{lst_to_sol_rate,calculate_lst_to_sol_amounts};
 
-pub fn unstake_sol_from_validator(program_id:&Pubkey, accounts:&[AccountInfo], stake_acc_index:u64, lst_manager_bump:u8, lst_manager_vault_bump:u8, epoch_withdraw_bump:u8, stake_acc_bump:u8, split_stake_acc_bump:u8, stake_registry_record_bump:u8)->ProgramResult{
+pub fn unstake_sol_from_validator(program_id:&Pubkey, accounts:&[AccountInfo], stake_acc_index:u64, lst_manager_bump:u8, lst_manager_vault_bump:u8, lst_manager_user_withdrawl_vault_bump:u8, epoch_withdraw_bump:u8, stake_acc_bump:u8, split_stake_acc_bump:u8, stake_registry_record_bump:u8)->ProgramResult{
     let mut accounts_iter=accounts.iter();
     let user=next_account_info(&mut accounts_iter)?;
     let lst_manager_pda=next_account_info(&mut accounts_iter)?;
     let lst_manager_vault_pda=next_account_info(&mut accounts_iter)?;
-    
+    let lst_manager_user_withdrawl_vault_pda=next_account_info(&mut accounts_iter)?;
+
     let epoch_withdraw_pda=next_account_info(&mut accounts_iter)?;
     let stake_acc=next_account_info(&mut accounts_iter)?;
     let split_stake_acc=next_account_info(&mut accounts_iter)?;
@@ -85,6 +86,13 @@ pub fn unstake_sol_from_validator(program_id:&Pubkey, accounts:&[AccountInfo], s
         return Err(LSTErrors::SplitStakePdaMismatch.into());
     }
     
+    //change
+    let lst_manager_user_withdrawl_vault_seeds=&["lst_manager_user_withdrawl_vault".as_bytes(), lst_manager_pda.key.as_ref(), &[lst_manager_user_withdrawl_vault_bump]];
+    let lst_manager_user_withdrawl_vault_derived=Pubkey::create_program_address(lst_manager_user_withdrawl_vault_seeds, program_id)?;
+    if *lst_manager_user_withdrawl_vault_pda.key!=lst_manager_user_withdrawl_vault_derived{
+        return Err(LSTErrors::LSTManagerUserWithdrawlVaultPdaMismatch.into());
+    }
+
     let mut epoch_withdraw_pda_data=EpochWithdraw::try_from_slice(&epoch_withdraw_pda.data.borrow())?;
     if epoch_withdraw_pda_data.finalised{
         return Err(LSTErrors::EpochWithdrawAlreadyFinalised.into());
@@ -108,11 +116,15 @@ pub fn unstake_sol_from_validator(program_id:&Pubkey, accounts:&[AccountInfo], s
     invoke_signed(&create_split_stake_acc_ix,
         &[user.clone(), split_stake_acc.clone(), system_prog.clone()],
         &[split_stake_acc_seeds])?;
-    msg!("split stake account created!");
+    msg!("split stake account created!");  
     
     //splitting thr main stake account
     let available_amount_to_split=stake_acc.lamports()-rent.minimum_balance(200) -1;
-    let mut amount_to_split=epoch_withdraw_pda_data.sol_amount_to_unstake;
+    
+    // let mut amount_to_split=epoch_withdraw_pda_data.sol_amount_to_unstake;
+    //this tracks all old balance also to unstake from missed epochs
+    let user_withdrawl_vault_balance=lst_manager_user_withdrawl_vault_pda.lamports()-rent.minimum_balance(0);
+    let mut amount_to_split=lst_manager_data.total_pending_withdrawl_sol-user_withdrawl_vault_balance;
     msg!("sol amount to split from stake acc : {}",amount_to_split);
     msg!("available_amount_to_split : {}", available_amount_to_split);
     if amount_to_split > available_amount_to_split{
@@ -154,6 +166,8 @@ pub fn unstake_sol_from_validator(program_id:&Pubkey, accounts:&[AccountInfo], s
 
     // lst_manager_data.total_sol_staked-=epoch_withdraw_pda_data.sol_amount_to_unstake;
     lst_manager_data.total_sol_staked-=amount_to_split;
+    //change
+    lst_manager_data.total_pending_withdrawl_sol-=amount_to_split;
     lst_manager_data.serialize(&mut *lst_manager_pda.data.borrow_mut())?;
     
     epoch_withdraw_pda_data.finalised=true; 

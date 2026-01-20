@@ -86,7 +86,7 @@ pub fn claim_sol_from_withdraw_vault(program_id:&Pubkey, accounts:&[AccountInfo]
     &[lst_manager_user_withdrawl_vault_seeds])?;
 
     let mut lst_manager_pda_data=LSTManager::try_from_slice(&lst_manager_pda.data.borrow())?;
-    lst_manager_pda_data.total_pending_withdrawl_sol-=user_withdraw_request_data.sol_amount_user_gets;
+    // lst_manager_pda_data.total_pending_withdrawl_sol-=user_withdraw_request_data.sol_amount_user_gets;
     user_withdraw_request_data.withdraw_status=UserWithdrawStatus::COMPLETED;
     
     user_withdraw_request_data.serialize(&mut *user_withdraw_request_pda.data.borrow_mut())?;        

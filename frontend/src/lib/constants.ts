@@ -1,7 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 import { Buffer } from "buffer";
 
-export const PROGRAM_ID=new PublicKey("5BqFpmjSMiCAaQJmc1M7iZmgE8nh5MYYkZ51vjFUe27q");  //test localhost program
+export const PROGRAM_ID=new PublicKey("4LmHLiVM1CXuNxKwpHMepnDQyzDjp4hvRY1KHBqovgbt");  //test localhost program
 // export const PROGRAM_ID=new PublicKey("8zmqASz5ix2FkcqSHn9C5ZpsWGSuiApGW8XEkxhNZ6Nu");   //deployed vercel program
 
 export const [lstManagerPda, lstManagerBump]=PublicKey.findProgramAddressSync([Buffer.from("lst_manager")], PROGRAM_ID);

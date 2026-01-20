@@ -1,5 +1,5 @@
 import { AlertCircle, CheckCircle, Database } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil';
 import { splitAccountsState } from '../state/splitAccountsState';
 import { LAMPORTS_PER_SOL, PublicKey, StakeProgram, SYSVAR_CLOCK_PUBKEY, SYSVAR_STAKE_HISTORY_PUBKEY, Transaction, TransactionInstruction } from '@solana/web3.js';
@@ -15,10 +15,20 @@ const AdminWithdraw = () => {
   let {connection}=useConnection();
   let wallet=useWallet();
   const [selectedSplitStake, setSelectedSplitStake] = useState('');
+  const [withdrawVaultBalance, setWithdrawVaultBalance] = useState(0);
   let activeSplitAccounts=useRecoilValue(splitAccountsState);
   let userAddress=useRecoilValue(navState);
 
   console.log("lstManagerWithdrawVaultBump : ",lstManagerWithdrawVaultPda.toBase58());
+
+  useEffect(() => {
+    async function getWithdrawVaultBalance() {
+      let withdrawVaultBal = await connection.getBalance(lstManagerWithdrawVaultPda, "confirmed") - await connection.getMinimumBalanceForRentExemption(0, "confirmed");
+      setWithdrawVaultBalance(withdrawVaultBal);
+    }
+    getWithdrawVaultBalance();
+  }, [connection]);
+
 //   const splitStakeAccounts = [
 //     { index: 0, address: '2vB5...xT9u', amount: 5000, status: 'deactivating', unlockEpoch: 1006, currentEpoch: 1005 },
 //     { index: 1, address: '8nC7...yW3v', amount: 7500, status: 'inactive', unlockEpoch: 1005, currentEpoch: 1005 },
@@ -65,6 +75,11 @@ const AdminWithdraw = () => {
             <Database size={22} className="text-purple-400" />Withdraw from Split Stake Acc to Withdraw Vault
         </h3>
         <div className="space-y-4">
+            <div>
+                <label className="text-sm text-purple-300 mb-2 block">Available Withdraw Vault Balance</label>
+                <div className="text-3xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{withdrawVaultBalance/LAMPORTS_PER_SOL} SOL</div>
+            </div>
+
             <div>
                 <label className="text-sm text-purple-300 mb-2 block">Select Split Stake Account</label>
                 <select value={selectedSplitStake} onChange={(e) => setSelectedSplitStake(e.target.value)} className="w-full bg-gradient-to-br from-gray-900/60 to-gray-900/40 border-2 border-purple-500/30 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500 focus:shadow-lg focus:shadow-purple-500/20 transition-all cursor-pointer">

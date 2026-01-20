@@ -37,8 +37,8 @@ pub fn process_instruction(program_id:&Pubkey, accounts:&[AccountInfo], instruct
             msg!("burn LST ix called");
             burn_lst_to_redeem_sol(program_id, accounts, burn_lst_amount, lst_manager_bump, lst_manager_vault_bump, lst_mint_bump, user_withdraw_request_bump, epoch_withdraw_bump)?;
         },
-        InstructionType::UnstakeSOLFromValidator {stake_acc_index, lst_manager_bump,lst_manager_vault_bump,epoch_withdraw_bump, stake_acc_bump ,split_stake_acc_bump,stake_registry_record_bump}=>{
-            unstake_sol_from_validator(program_id, accounts, stake_acc_index, lst_manager_bump, lst_manager_vault_bump, epoch_withdraw_bump, stake_acc_bump, split_stake_acc_bump, stake_registry_record_bump)?;
+        InstructionType::UnstakeSOLFromValidator {stake_acc_index, lst_manager_bump,lst_manager_vault_bump, lst_manager_user_withdrawl_vault_bump, epoch_withdraw_bump, stake_acc_bump ,split_stake_acc_bump,stake_registry_record_bump}=>{
+            unstake_sol_from_validator(program_id, accounts, stake_acc_index, lst_manager_bump, lst_manager_vault_bump, lst_manager_user_withdrawl_vault_bump, epoch_withdraw_bump, stake_acc_bump, split_stake_acc_bump, stake_registry_record_bump)?;
         },
         InstructionType::WithdrawFromSplitStake {split_stake_acc_index, lst_manager_bump, lst_manager_user_withdrawl_vault_bump, split_stake_acc_bump}=>{
             msg!("withdraw from split stake ix called");

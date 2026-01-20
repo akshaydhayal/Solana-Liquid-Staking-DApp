@@ -37,7 +37,7 @@ describe("lst manager tests",()=>{
     beforeAll(async()=>{ 
         user=Keypair.fromSecretKey(Uint8Array.from([48,182,182,234,169,224,236,113,52,199,47,66,39,2,163,52,183,44,45,27,127,49,133,151,64,70,248,16,46,218,234,198,42,180,5,68,243,235,189,56,197,37,17,85,205,189,100,191,64,74,171,3,37,193,199,195,213,54,156,198,228,15,248,188]));
         // lst_manager_prog=new PublicKey("8zmqASz5ix2FkcqSHn9C5ZpsWGSuiApGW8XEkxhNZ6Nu");  //deployed site program
-        lst_manager_prog=new PublicKey("5BqFpmjSMiCAaQJmc1M7iZmgE8nh5MYYkZ51vjFUe27q");   //test localhost
+        lst_manager_prog=new PublicKey("4LmHLiVM1CXuNxKwpHMepnDQyzDjp4hvRY1KHBqovgbt");   //test localhost
     
         connection=new Connection(clusterApiUrl("devnet"),"confirmed");
         vote_acc=new PublicKey("DSQ5BLBM6UcuWP2SNpmf3TJeMbqbwTFGzVqFGufyNCgk");

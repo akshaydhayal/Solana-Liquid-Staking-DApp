@@ -5,7 +5,7 @@ import { stakeAccountsState } from '../state/stakeAccountsState';
 import { LAMPORTS_PER_SOL, PublicKey, StakeProgram, SystemProgram, SYSVAR_CLOCK_PUBKEY, Transaction, TransactionInstruction } from '@solana/web3.js';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { navState } from '../state/navState';
-import { lstManagerBump, lstManagerPda, lstManagerVaultBump, lstManagerVaultPda, PROGRAM_ID, stakeRegistryRecordBump, stakeRegistryRecordPda } from '../lib/constants';
+import { lstManagerBump, lstManagerPda, lstManagerVaultBump, lstManagerVaultPda, lstManagerWithdrawVaultBump, lstManagerWithdrawVaultPda, PROGRAM_ID, stakeRegistryRecordBump, stakeRegistryRecordPda } from '../lib/constants';
 import { Buffer } from 'buffer';
 import * as borsh from "borsh";
 import { valueToU64Schema } from '../lib/borshSchema';
@@ -56,6 +56,7 @@ const AdminUnstake = () => {
             {pubkey:userAddress.user_address, isSigner:true, isWritable:true},
             {pubkey:lstManagerPda, isSigner:false, isWritable:true},
             {pubkey:lstManagerVaultPda, isSigner:false, isWritable:false},
+            {pubkey:lstManagerWithdrawVaultPda, isSigner:false, isWritable:true},
             {pubkey:epochWithdrawPda, isSigner:false, isWritable:true},
 
             {pubkey:stakeAccPda, isSigner:false, isWritable:true},
@@ -70,6 +71,7 @@ const AdminUnstake = () => {
             Buffer.from(serialisedStakeIndex),
             Buffer.from([lstManagerBump]),
             Buffer.from([lstManagerVaultBump]),
+            Buffer.from([lstManagerWithdrawVaultBump]),
             Buffer.from([epochWithdrawBump]),
             Buffer.from([stakeAccBump]),
             Buffer.from([nextSplitAcc.nextSplitAccBump]),
