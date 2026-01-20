@@ -12,6 +12,14 @@ Single README covering the on-chain program and the React/Tailwind frontend.
 
 ---
 
+### User Demo
+Complete user flow : connecting wallet → staking SOL → receiving LST → unstaking dSOL → waiting for cooldown → claiming SOL
+![Demo](https://github.com/akshaydhayal/Solana-LST-Manager-Program/blob/main/user_demo.gif)
+
+### Admin Demo
+Complete admin flow : connecting admin wallet → staking vault SOL to validator → unstaking for epoch → withdrawing from split stake → users claiming SOL
+![Demo](https://github.com/akshaydhayal/Solana-LST-Manager-Program/blob/main/admin_demo.gif)
+
 ## Program Architecture
 ### Core PDAs (seeds → purpose)
 - `["lst_manager", bump]` → LST manager state (admin, mint, totals).
@@ -187,123 +195,14 @@ npm run dev   # Vite dev server
 
 ---
 
-## Screenshots & Demo
-
-### User Flow Screenshots
-
+## Screenshots Demo
 #### 1. User Dashboard - Overview
-![User Dashboard Overview](./screenshots/user-dashboard-overview.png)
+![User Dashboard Overview](https://github.com/akshaydhayal/Solana-LST-Manager-Program/blob/main/user_ui.png)
 *Main user dashboard showing stats grid, stake/unstake tabs, and pending withdrawals card.*
 
-#### 2. Stake SOL Interface
-![Stake SOL Interface](./screenshots/user-stake-interface.png)
-*Stake card showing amount input, balance validation, exchange rate, and stake button.*
-
-#### 3. Stake Success Notification
-![Stake Success](./screenshots/user-stake-success.png)
-*Toast notification showing successful stake transaction with Solana Explorer link.*
-
-#### 4. Unstake dSOL Interface
-![Unstake dSOL Interface](./screenshots/user-unstake-interface.png)
-*Unstake card showing amount input, balance validation, cooldown information, and unstake button.*
-
-#### 5. Unstake Success Notification
-![Unstake Success](./screenshots/user-unstake-success.png)
-*Toast notification showing successful unstake request with Solana Explorer link.*
-
-#### 6. Pending Withdrawals - Waiting
-![Pending Withdrawals Waiting](./screenshots/user-pending-withdrawals-waiting.png)
-*Pending withdrawals card showing withdrawal request with "Waiting for epoch end" status.*
-
-#### 7. Pending Withdrawals - Ready to Claim
-![Pending Withdrawals Ready](./screenshots/user-pending-withdrawals-ready.png)
-*Pending withdrawals card showing withdrawal request ready to claim with "Claim SOL Now" button.*
-
-#### 8. Claim Success Notification
-![Claim Success](./screenshots/user-claim-success.png)
-*Toast notification showing successful claim transaction with Solana Explorer link.*
-
-### Admin Flow Screenshots
-
-#### 9. Admin Dashboard - Overview
-![Admin Dashboard Overview](./screenshots/admin-dashboard-overview.png)
+#### 2. Admin Dashboard - Overview
+![Admin Dashboard Overview](https://github.com/akshaydhayal/Solana-LST-Manager-Program/blob/main/admin_ui.png)
 *Main admin dashboard showing stats grid, admin action tabs, and stake/split account lists.*
-
-#### 10. Stake Vault SOL to Validator
-![Admin Stake Vault](./screenshots/admin-stake-vault.png)
-*Admin stake interface showing vault balance, validator dropdown selector, and stake button.*
-
-#### 11. Admin Stake Success Notification
-![Admin Stake Success](./screenshots/admin-stake-success.png)
-*Toast notification showing successful vault staking transaction with Solana Explorer link.*
-
-#### 12. Unstake SOL from Validator
-![Admin Unstake](./screenshots/admin-unstake.png)
-*Admin unstake interface showing stake account selector, account details, and unstake button.*
-
-#### 13. Admin Unstake Success Notification
-![Admin Unstake Success](./screenshots/admin-unstake-success.png)
-*Toast notification showing successful unstake transaction with Solana Explorer link.*
-
-#### 14. Withdraw from Split Stake
-![Admin Withdraw](./screenshots/admin-withdraw.png)
-*Admin withdraw interface showing withdraw vault balance, split stake account selector, and withdraw button.*
-
-#### 15. Admin Withdraw Success Notification
-![Admin Withdraw Success](./screenshots/admin-withdraw-success.png)
-*Toast notification showing successful withdrawal transaction with Solana Explorer link.*
-
-#### 16. Active Stake Accounts List
-![Active Stake Accounts](./screenshots/admin-active-stake-accounts.png)
-*Sidebar showing list of active stake accounts with amounts and activation epochs.*
-
-#### 17. Split Stake Accounts List
-![Split Stake Accounts](./screenshots/admin-split-stake-accounts.png)
-*Sidebar showing list of split stake accounts with withdraw readiness status and deactivation epochs.*
-
-### Demo Videos
-
-#### User Demo Video
-[![User Demo Video](./screenshots/user-demo-thumbnail.png)](https://youtube.com/watch?v=USER_DEMO_VIDEO_ID)
-*Complete user flow: connecting wallet → staking SOL → receiving LST → unstaking dSOL → waiting for cooldown → claiming SOL.*
-
-**Video Link:** `https://youtube.com/watch?v=USER_DEMO_VIDEO_ID` (Replace with actual video URL)
-
-#### Admin Demo Video
-[![Admin Demo Video](./screenshots/admin-demo-thumbnail.png)](https://youtube.com/watch?v=ADMIN_DEMO_VIDEO_ID)
-*Complete admin flow: connecting admin wallet → staking vault SOL to validator → unstaking for epoch → withdrawing from split stake → users claiming SOL.*
-
-**Video Link:** `https://youtube.com/watch?v=ADMIN_DEMO_VIDEO_ID` (Replace with actual video URL)
-
----
-
-### Screenshot Directory Structure
-```
-lst_manager/
-├── screenshots/
-│   ├── user-dashboard-overview.png
-│   ├── user-stake-interface.png
-│   ├── user-stake-success.png
-│   ├── user-unstake-interface.png
-│   ├── user-unstake-success.png
-│   ├── user-pending-withdrawals-waiting.png
-│   ├── user-pending-withdrawals-ready.png
-│   ├── user-claim-success.png
-│   ├── admin-dashboard-overview.png
-│   ├── admin-stake-vault.png
-│   ├── admin-stake-success.png
-│   ├── admin-unstake.png
-│   ├── admin-unstake-success.png
-│   ├── admin-withdraw.png
-│   ├── admin-withdraw-success.png
-│   ├── admin-active-stake-accounts.png
-│   ├── admin-split-stake-accounts.png
-│   ├── user-demo-thumbnail.png
-│   └── admin-demo-thumbnail.png
-└── README.md
-```
-
-**Note:** Create the `screenshots/` directory and add your screenshots with the filenames listed above. Replace the video placeholder URLs with actual YouTube or video hosting links when available.
 
 ---
 
